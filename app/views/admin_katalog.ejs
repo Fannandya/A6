@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Kendaraan - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        /* REVISI 1: Menghapus overflow-x: hidden agar scrollbar bisa muncul */
+        body { min-height: 100vh; }
+        
+        .sidebar { min-height: 100vh; background-color: #212529; color: white; }
+        .sidebar a { color: #adb5bd; text-decoration: none; padding: 10px 20px; display: block; }
+        .sidebar a:hover, .sidebar a.active { background-color: #0d6efd; color: white; }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <div class="sidebar col-md-2 d-none d-md-block">
+            <div class="p-3 text-center border-bottom border-secondary">
+                <h4 class="fw-bold">🛡️ Admin Panel</h4>
+                <small>Halo, <%= user.nama %></small>
+            </div>
+            <ul class="list-unstyled mt-3">
+                <li><a href="/admin/dashboard"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a></li>
+                <li><a href="/admin/katalog" class="active"><i class="bi bi-car-front-fill me-2"></i> Daftar Kendaraan</a></li>
+                <li><a href="/admin/upload"><i class="bi bi-cloud-upload-fill me-2"></i> Upload Unit Baru</a></li>
+                <li><a href="/admin/logs"><i class="bi bi-journal-text me-2"></i> Log Penjualan</a></li>
+                <li class="mt-5"><a href="/logout" class="text-danger"><i class="bi bi-box-arrow-left me-2"></i> Logout</a></li>
+            </ul>
+        </div>
+
+        <div class="col-md-10 w-100 p-4 bg-light">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>🚗 Daftar Semua Kendaraan</h2>
+                <a href="/admin/upload" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Tambah Unit
+                </a>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    
+                    <div class="table-responsive">
+                        
+                        <table class="table table-hover align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th style="min-width: 100px;">Foto</th> <th style="min-width: 200px;">Info Kendaraan</th>
+                                    <th>Harga</th>
+                                    <th>Penjual</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (products.length > 0) { %>
+                                    <% products.forEach(motor => { %>
+                                        <tr>
+                                            <td>
+                                                <img src="/uploads/<%= motor.gambar || 'default.jpg' %>" 
+                                                     width="80" height="60" style="object-fit: cover; border-radius: 5px;"
+                                                     onerror="this.src='/uploads/default.jpg'">
+                                            </td>
+                                            
+                                            <td>
+                                                <strong><%= motor.merek %> <%= motor.model %></strong><br>
+                                                <small class="text-muted"><%= motor.tahun %> • <%= motor.cc %> CC</small>
+                                            </td>
+                                            
+                                            <td class="text-primary fw-bold">
+                                                Rp <%= parseInt(motor.harga).toLocaleString('id-ID') %>
+                                            </td>
+                                            
+                                            <td><%= motor.nama_penjual %></td>
+                                            
+                                            <td>
+                                                <% if(motor.status === 'tersedia') { %>
+                                                    <span class="badge bg-success">Tersedia</span>
+                                                <% } else { %>
+                                                    <span class="badge bg-secondary">Terjual</span>
+                                                <% } %>
+                                            </td>
+                                            
+                                            <td>
+                                                <div class="d-flex gap-2">
+                                                    <a href="/admin/edit/<%= motor.id %>" class="btn btn-sm btn-primary" title="Edit Data">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </a>
+
+                                                    <form action="/admin/delete/<%= motor.id %>" method="POST" onsubmit="return confirm('Yakin mau hapus motor <%= motor.merek %> <%= motor.model %>?');">
+                                                        <button type="submit" class="btn btn-sm btn-danger" title="Hapus Data">
+                                                            <i class="bi bi-trash-fill"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="6" class="text-center py-4 text-muted">
+                                            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                            Belum ada data kendaraan. Silakan upload unit baru.
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        
+                    </div> </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

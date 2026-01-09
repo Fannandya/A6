@@ -1,0 +1,19 @@
+{
+  "name": "praktikum-tekser-template",
+  "version": "1.0.0",
+  "description": "Welcome, Challengers! 👋\r Ini adalah **Starter Pack** (Kerangka Awal) untuk Project Akhir kalian. Repository ini sengaja dibuat **\"Barebones\"** (Kosongan) agar kalian bisa membangun arsitektur server dari dasar dengan struktur yang rapi.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kakonoomoidee/praktikum-tekser-template.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kakonoomoidee/praktikum-tekser-template/issues"
+  },
+  "homepage": "https://github.com/kakonoomoidee/praktikum-tekser-template#readme"
+}

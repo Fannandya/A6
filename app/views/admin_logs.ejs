@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <title>Log Penjualan - JB Motor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3>📋 Log Penjualan / Transaksi</h3>
+            <a href="/admin/dashboard" class="btn btn-outline-secondary">Kembali ke Dashboard</a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Tanggal</th>
+                            <th>Pembeli</th>
+                            <th>Unit Motor</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (logs.length > 0) { %>
+                            <% logs.forEach(log => { %>
+                                <tr>
+                                    <td>#<%= log.id %></td>
+                                    <td><%= new Date(log.tanggal_transaksi).toLocaleDateString() %></td>
+                                    <td><%= log.pembeli %></td>
+                                    <td><%= log.merek %> - <%= log.model %></td>
+                                    <td>
+                                        <span class="badge bg-<%= log.status === 'selesai' ? 'success' : 'warning' %>">
+                                            <%= log.status %>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="5" class="text-center">Belum ada transaksi.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
