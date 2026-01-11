@@ -48,7 +48,11 @@
                             <textarea name="isi" class="form-control" rows="2" placeholder="Pelayanan ramah, motor mulus banget..." required></textarea>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-success"><i class="bi bi-send"></i> Kirim Testimoni</button>
+                    <% if (user) { %>
+                        <button type="submit" class="btn btn-success"><i class="bi bi-send"></i> Kirim Testimoni</button>
+                    <% } else { %>
+                        <a href="/login" class="btn btn-warning">Login untuk Mengirim</a>
+                    <% } %>
                 </form>
             </div>
         </div>
@@ -59,22 +63,39 @@
                     <div class="col-md-6 mb-4">
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h5 class="card-title fw-bold text-primary"><i class="bi bi-person-circle"></i> <%= t.nama %></h5>
-                                    <small class="text-muted"><%= new Date(t.created_at).toLocaleDateString('id-ID') %></small>
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <h5 class="card-title fw-bold text-primary mb-0"><i class="bi bi-person-circle"></i> <%= t.nama %></h5>
+                                        <small class="text-muted" style="font-size: 0.8rem;"><%= new Date(t.created_at).toLocaleDateString('id-ID') %></small>
+                                    </div>
+                                    
+                                    <% if (user && (user.id === t.user_id || user.role === 'admin')) { %>
+                                        <div class="d-flex gap-1">
+                                            <a href="/testimoni/edit/<%= t.id %>" class="btn btn-sm btn-outline-primary" title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <form action="/testimoni/delete/<%= t.id %>" method="POST" onsubmit="return confirm('Hapus testimoni ini?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    <% } %>
                                 </div>
+                                <hr class="my-2">
                                 <p class="card-text fst-italic">"<%= t.isi %>"</p>
                             </div>
+                            
                             <div class="card-footer bg-white d-flex gap-2">
                                 <form action="/testimoni/<%= t.id %>/react" method="POST" class="d-inline">
                                     <input type="hidden" name="type" value="like">
-                                    <button type="submit" class="btn btn-outline-success btn-sm">
+                                    <button type="submit" class="btn btn-light btn-sm text-success border">
                                         <i class="bi bi-hand-thumbs-up-fill"></i> <%= t.likes %>
                                     </button>
                                 </form>
                                 <form action="/testimoni/<%= t.id %>/react" method="POST" class="d-inline">
                                     <input type="hidden" name="type" value="dislike">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <button type="submit" class="btn btn-light btn-sm text-danger border">
                                         <i class="bi bi-hand-thumbs-down-fill"></i> <%= t.dislikes %>
                                     </button>
                                 </form>

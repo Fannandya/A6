@@ -7,7 +7,6 @@ const path = require("path");
 const authController = require("../controllers/authController");
 const adminController = require("../controllers/adminController");
 const homeController = require("../controllers/homeController");
-// Pastikan file testimoniController.js sudah ada di folder controllers!
 const testimoniController = require("../controllers/testimoniController");
 
 // --- 2. CONFIG UPLOAD GAMBAR ---
@@ -38,6 +37,12 @@ router.post("/login", authController.loginProcess);
 router.get("/register", authController.registerPage);
 router.post("/register", authController.registerProcess);
 router.get("/logout", authController.logout);
+
+// C. DASHBOARD USER BIASA (INI YANG TADI SALAH/KURANG UPDATE)
+// Pastikan ini memanggil homeController.dashboardUser, BUKAN render manual.
+router.get("/dashboard", homeController.dashboardUser);
+
+// D. ADMIN PANEL (Perlu verifyAdmin)
 router.get("/admin/dashboard", verifyAdmin, adminController.dashboard);
 router.get("/admin/katalog", verifyAdmin, adminController.katalog);
 router.post("/admin/delete/:id", verifyAdmin, adminController.deleteProduct);
@@ -48,17 +53,6 @@ router.post(
   upload.single("gambar"),
   adminController.updateProduct
 );
-
-// C. DASHBOARD USER BIASA
-router.get("/dashboard", (req, res) => {
-  if (!req.session.user) return res.redirect("/login");
-  res.render("user_dashboard", { user: req.session.user });
-});
-
-// D. ADMIN PANEL (Perlu verifyAdmin)
-router.get("/admin/dashboard", verifyAdmin, (req, res) => {
-  res.render("admin_dashboard", { user: req.session.user });
-});
 router.get("/admin/upload", verifyAdmin, adminController.uploadPage);
 router.post(
   "/admin/upload",
@@ -68,10 +62,12 @@ router.post(
 );
 router.get("/admin/logs", verifyAdmin, adminController.getLogs);
 
-// E. TESTIMONI (FITUR BARU)
-// Pastikan testimoniController punya fungsi index, create, dan react
+// E. TESTIMONI (FULL FITUR)
 router.get("/testimoni", testimoniController.index);
 router.post("/testimoni", testimoniController.create);
 router.post("/testimoni/:id/react", testimoniController.react);
+router.post("/testimoni/delete/:id", testimoniController.delete);
+router.get("/testimoni/edit/:id", testimoniController.editPage);
+router.post("/testimoni/edit/:id", testimoniController.update);
 
 module.exports = router;
