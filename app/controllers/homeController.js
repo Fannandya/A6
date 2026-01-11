@@ -1,14 +1,10 @@
 const db = require("../config/database");
 
+// 1. HOMEPAGE (PUBLIK) - Tetap sama seperti sebelumnya
 exports.index = async (req, res) => {
   try {
-    // 1. Ambil input dari pencarian
     const { searchMerek, searchCC } = req.query;
 
-    // 2. Siapkan Query Dasar (PAKAI LEFT JOIN & COALESCE)
-    // Penjelasan:
-    // - LEFT JOIN: Biar motor yang gak punya user_id (upload manual) TETAP MUNCUL.
-    // - COALESCE: Prioritaskan nama_penjual di tabel produk. Kalau kosong, baru ambil nama user.
     let query = `
       SELECT p.*, 
              COALESCE(p.nama_penjual, u.nama) AS nama_penjual, 
@@ -19,7 +15,6 @@ exports.index = async (req, res) => {
     `;
     let params = [];
 
-    // 3. Tambahkan Filter jika user mencari sesuatu
     if (searchMerek) {
       query += " AND p.merek LIKE ?";
       params.push(`%${searchMerek}%`);
@@ -31,10 +26,8 @@ exports.index = async (req, res) => {
 
     query += " ORDER BY p.created_at DESC";
 
-    // 4. Jalankan Query
     const [products] = await db.query(query, params);
 
-    // 5. Cek hasil pencarian
     const isSearching = searchMerek || searchCC;
     const notFound = isSearching && products.length === 0;
 
@@ -46,25 +39,57 @@ exports.index = async (req, res) => {
       notFound: notFound,
     });
   } catch (error) {
-    console.error("Error di Home Controller:", error);
+    console.error("Error Home:", error);
     res.status(500).send("Server Error");
   }
 };
 
-// ... (Fungsi dashboardUser di bawahnya JANGAN DIHAPUS, biarkan tetap ada)
+// 2. DASHBOARD USER (REVISI TOTAL: Menambahkan Fitur Search & Filter)
 exports.dashboardUser = async (req, res) => {
+  // Cek Login
   if (!req.session.user) return res.redirect("/login");
+
   try {
-    // Dashboard user juga sebaiknya pakai query yang sama kalau mau menampilkan info penjual
-    const [products] = await db.query(
-      "SELECT * FROM produk WHERE status = 'tersedia' ORDER BY created_at DESC"
-    );
+    // --- LOGIKA PENCARIAN (Sama persis dengan Homepage) ---
+    const { searchMerek, searchCC } = req.query;
+
+    let query = `
+          SELECT p.*, 
+                 COALESCE(p.nama_penjual, u.nama) AS nama_penjual, 
+                 COALESCE(p.no_hp, u.no_hp) AS no_hp 
+          FROM produk p 
+          LEFT JOIN users u ON p.user_id = u.id 
+          WHERE p.status = 'tersedia'
+        `;
+    let params = [];
+
+    if (searchMerek) {
+      query += " AND p.merek LIKE ?";
+      params.push(`%${searchMerek}%`);
+    }
+    if (searchCC) {
+      query += " AND p.cc LIKE ?";
+      params.push(`%${searchCC}%`);
+    }
+
+    query += " ORDER BY p.created_at DESC";
+
+    const [products] = await db.query(query, params);
+
+    // Cek Not Found
+    const isSearching = searchMerek || searchCC;
+    const notFound = isSearching && products.length === 0;
+
+    // Render ke halaman DASHBOARD dengan data lengkap
     res.render("user_dashboard", {
       user: req.session.user,
       products: products,
+      searchMerek: searchMerek || "",
+      searchCC: searchCC || "",
+      notFound: notFound,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error Dashboard:", error);
     res.redirect("/");
   }
 };
