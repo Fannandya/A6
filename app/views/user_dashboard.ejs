@@ -1,166 +1,226 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard User - JB Motor</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
     <style>
-        .hover-effect { transition: transform 0.2s; }
-        .hover-effect:hover { transform: translateY(-5px); }
-        
-        /* Styling Kotak Pencarian Dashboard */
-        .dashboard-search {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-left: 5px solid #0d6efd;
-            margin-top: 20px;
-        }
+      .hover-effect {
+        transition: transform 0.2s;
+      }
+      .hover-effect:hover {
+        transform: translateY(-5px);
+      }
+
+      /* Styling Kotak Pencarian Dashboard */
+      .dashboard-search {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-left: 5px solid #0d6efd;
+        margin-top: 20px;
+      }
     </style>
-</head>
-<body class="bg-light">
+  </head>
+  <body class="bg-light">
+    <nav
+      class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm"
+    >
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="/dashboard">
+          <i class="bi bi-speedometer2"></i> Dashboard User
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto align-items-center">
+            <li class="nav-item">
+              <a class="nav-link active" href="/dashboard">Cari Motor</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/testimoni">Testimoni</a>
+            </li>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/dashboard">
-                <i class="bi bi-speedometer2"></i> Dashboard User
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/dashboard">Cari Motor</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/testimoni">Testimoni</a>
-                    </li>
-                    
-                    <div class="vr mx-3 d-none d-lg-block text-white opacity-50"></div>
+            <div class="vr mx-3 d-none d-lg-block text-white opacity-50"></div>
 
-                    <li class="nav-item me-2">
-                        <span class="nav-link text-white fw-bold" style="cursor: default;">
-                            <i class="bi bi-person-circle"></i> Hai, <%= user.nama %>
-                        </span>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-danger btn-sm rounded-pill px-3 fw-bold shadow-sm" href="/logout">
-                            <i class="bi bi-box-arrow-right"></i> Logout
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <li class="nav-item me-2">
+              <span class="nav-link text-white fw-bold" style="cursor: default">
+                <i class="bi bi-person-circle"></i> Hai, <%= user.nama %>
+              </span>
+            </li>
+            <li class="nav-item">
+              <a
+                class="btn btn-danger btn-sm rounded-pill px-3 fw-bold shadow-sm"
+                href="/logout"
+              >
+                <i class="bi bi-box-arrow-right"></i> Logout
+              </a>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
 
     <div class="container mt-4 mb-5">
-        <div class="text-center mb-4">
-            <h2 class="fw-bold">Mau Cari Motor Apa Hari Ini? 🏍️</h2>
-            <p class="text-muted">Temukan motor impianmu atau cek testimoni pembeli lain.</p>
-            
-            <a href="https://wa.me/6282220231617" target="_blank" class="btn btn-success rounded-pill px-4 btn-sm">
-                <i class="bi bi-whatsapp"></i> Chat Admin Umum
-            </a>
-        </div>
+      <div class="text-center mb-4">
+        <h2 class="fw-bold">Mau Cari Motor Apa Hari Ini? 🏍️</h2>
+        <p class="text-muted">
+          Temukan motor impianmu atau cek testimoni pembeli lain.
+        </p>
 
-        <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="dashboard-search">
-                    <h5 class="fw-bold mb-3"><i class="bi bi-search"></i> Filter Pencarian</h5>
-                    <form action="/dashboard" method="GET">
-                        <div class="row g-2">
-                            <div class="col-md-5">
-                                <label class="small text-muted">Merek</label>
-                                <input type="text" name="searchMerek" class="form-control" placeholder="Contoh: Honda..." value="<%= searchMerek %>">
-                            </div>
-                            <div class="col-md-5">
-                                <label class="small text-muted">CC Mesin</label>
-                                <input type="number" name="searchCC" class="form-control" placeholder="Contoh: 150..." value="<%= searchCC %>">
-                            </div>
-                            <div class="col-md-2 d-flex align-items-end">
-                                <button type="submit" class="btn btn-primary w-100 fw-bold">Cari</button>
-                            </div>
-                        </div>
-                    </form>
+        <a
+          href="https://wa.me/6282220231617"
+          target="_blank"
+          class="btn btn-success rounded-pill px-4 btn-sm"
+        >
+          <i class="bi bi-whatsapp"></i> Chat Admin Umum
+        </a>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-md-10">
+          <div class="dashboard-search">
+            <h5 class="fw-bold mb-3">
+              <i class="bi bi-search"></i> Filter Pencarian
+            </h5>
+            <form action="/dashboard" method="GET">
+              <div class="row g-2">
+                <div class="col-md-5">
+                  <label class="small text-muted">Merek</label>
+                  <input
+                    type="text"
+                    name="searchMerek"
+                    class="form-control"
+                    placeholder="Contoh: Honda..."
+                    value="<%= searchMerek %>"
+                  />
                 </div>
-            </div>
+                <div class="col-md-5">
+                  <label class="small text-muted">CC Mesin</label>
+                  <input
+                    type="number"
+                    name="searchCC"
+                    class="form-control"
+                    placeholder="Contoh: 150..."
+                    value="<%= searchCC %>"
+                  />
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                  <button type="submit" class="btn btn-primary w-100 fw-bold">
+                    Cari
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
 
     <div class="container mb-5">
-        <div class="row">
-            <% if (products.length > 0) { %>
-                <% products.forEach(motor => { %>
-                    <div class="col-md-3 mb-4">
-                        <div class="card h-100 shadow-sm border-0 hover-effect">
-                            <img src="/uploads/<%= motor.gambar || 'default.jpg' %>" 
-                                 class="card-img-top" alt="<%= motor.merek %>"
-                                 style="height: 200px; object-fit: cover;"
-                                 onerror="this.src='/uploads/default.jpg'">
-                            
-                            <div class="card-body">
-                                <h5 class="card-title fw-bold"><%= motor.merek %> <%= motor.model %></h5>
-                                <p class="card-text text-muted small">
-                                    <i class="bi bi-calendar"></i> <%= motor.tahun %> • 
-                                    <i class="bi bi-fuel-pump"></i> <%= motor.cc %> CC
-                                </p>
-                                <h5 class="text-primary fw-bold">Rp <%= parseInt(motor.harga).toLocaleString('id-ID') %></h5>
-                                
-                                <% if (motor.nama_penjual) { %>
-                                    <small class="text-muted d-block mb-2">
-                                        <i class="bi bi-person"></i> Penjual: <%= motor.nama_penjual %>
-                                    </small>
-                                <% } %>
-                            </div>
+      <div class="row">
+        <% if (products.length > 0) { %> <% products.forEach(motor => { %>
+        <div class="col-md-3 mb-4">
+          <div class="card h-100 shadow-sm border-0 hover-effect">
+            <img
+              src="/uploads/<%= motor.gambar || 'default.jpg' %>"
+              class="card-img-top"
+              alt="<%= motor.merek %>"
+              style="height: 200px; object-fit: cover"
+              onerror="this.src='/uploads/default.jpg'"
+            />
 
-                            <div class="card-footer bg-white border-top-0 pb-3">
-                                <a href="https://wa.me/6282220231617?text=Halo%20Admin,%20saya%20tertarik%20dengan%20motor%20<%= motor.merek %>%20<%= motor.model %>%20Tahun%20<%= motor.tahun %>%20(<%= motor.cc %>%20CC)%20seharga%20Rp%20<%= parseInt(motor.harga).toLocaleString('id-ID') %>" 
-                                   target="_blank" class="btn btn-outline-success w-100 rounded-pill fw-bold">
-                                    <i class="bi bi-whatsapp"></i> Hubungi Admin
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                <% }) %>
-            <% } else { %>
-                <% if (!notFound) { %>
-                    <div class="col-12 text-center py-5">
-                        <h4 class="text-muted">Belum ada motor yang tersedia.</h4>
-                    </div>
-                <% } %>
-            <% } %>
+            <div class="card-body">
+              <h5 class="card-title fw-bold">
+                <%= motor.merek %> <%= motor.model %>
+              </h5>
+              <p class="card-text text-muted small">
+                <i class="bi bi-calendar"></i> <%= motor.tahun %> •
+                <i class="bi bi-fuel-pump"></i> <%= motor.cc %> CC
+              </p>
+              <h5 class="text-primary fw-bold">
+                Rp <%= parseInt(motor.harga).toLocaleString('id-ID') %>
+              </h5>
+
+              <% if (motor.nama_penjual) { %>
+              <small class="text-muted d-block mb-2">
+                <i class="bi bi-person"></i> Penjual: <%= motor.nama_penjual %>
+              </small>
+              <% } %>
+            </div>
+
+            <div class="card-footer bg-white border-top-0 pb-3">
+              <a
+                href="https://wa.me/6282220231617?text=Halo%20Admin,%20saya%20tertarik%20dengan%20motor%20<%= motor.merek %>%20<%= motor.model %>%20Tahun%20<%= motor.tahun %>%20(<%= motor.cc %>%20CC)%20seharga%20Rp%20<%= parseInt(motor.harga).toLocaleString('id-ID') %>"
+                target="_blank"
+                class="btn btn-outline-success w-100 rounded-pill fw-bold"
+              >
+                <i class="bi bi-whatsapp"></i> Hubungi Admin
+              </a>
+            </div>
+          </div>
         </div>
+        <% }) %> <% } else { %> <% if (!notFound) { %>
+        <div class="col-12 text-center py-5">
+          <h4 class="text-muted">Belum ada motor yang tersedia.</h4>
+        </div>
+        <% } %> <% } %>
+      </div>
     </div>
 
-    <div class="modal fade" id="notFoundModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content text-center p-4">
-                <div class="modal-body">
-                    <i class="bi bi-search display-1 text-primary mb-3 d-block"></i>
-                    <h3 class="fw-bold mb-3">Motor Tidak Ditemukan!</h3>
-                    <p class="text-muted mb-4">
-                        Pencarian Dashboard: Merek <strong>"<%= searchMerek %>"</strong> 
-                        dan Kapasitas <strong>"<%= searchCC %>"</strong> CC tidak ada.
-                    </p>
-                    <a href="/dashboard" class="btn btn-primary btn-lg rounded-pill px-5">Reset Pencarian</a>
-                </div>
-            </div>
+    <div
+      class="modal fade"
+      id="notFoundModal"
+      tabindex="-1"
+      aria-hidden="true"
+      data-bs-backdrop="static"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center p-4">
+          <div class="modal-body">
+            <i class="bi bi-search display-1 text-primary mb-3 d-block"></i>
+            <h3 class="fw-bold mb-3">Motor Tidak Ditemukan!</h3>
+            <p class="text-muted mb-4">
+              Pencarian Dashboard: Merek
+              <strong>"<%= searchMerek %>"</strong> dan Kapasitas
+              <strong>"<%= searchCC %>"</strong> CC tidak ada.
+            </p>
+            <a
+              href="/dashboard"
+              class="btn btn-primary btn-lg rounded-pill px-5"
+              >Reset Pencarian</a
+            >
+          </div>
         </div>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <% if (notFound) { %>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var myModal = new bootstrap.Modal(document.getElementById('notFoundModal'));
-            myModal.show();
-        });
+      document.addEventListener("DOMContentLoaded", function () {
+        var myModal = new bootstrap.Modal(
+          document.getElementById("notFoundModal")
+        );
+        myModal.show();
+      });
     </script>
     <% } %>
-</body>
+  </body>
 </html>

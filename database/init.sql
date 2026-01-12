@@ -1,20 +1,22 @@
 USE jbmotor_db;
 
--- Tabel Users
+-- 1. Tabel Users
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nama VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL, -- Ingat, di real app ini harus di-hash!
+    password VARCHAR(255) NOT NULL,
     role ENUM('admin', 'user') DEFAULT 'user',
     no_hp VARCHAR(20),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabel Produk 
+-- 2. Tabel Produk (SUDAH DIPERBAIKI: Ada nama_penjual)
 CREATE TABLE IF NOT EXISTS produk (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
+    nama_penjual VARCHAR(100),
+    no_hp VARCHAR(20),
     merek VARCHAR(50) NOT NULL,
     model VARCHAR(100) NOT NULL,
     tahun INT NOT NULL,
@@ -27,7 +29,7 @@ CREATE TABLE IF NOT EXISTS produk (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Tabel Transaksi 
+-- 3. Tabel Transaksi
 CREATE TABLE IF NOT EXISTS transaksi (
     id INT AUTO_INCREMENT PRIMARY KEY,
     produk_id INT,
@@ -38,14 +40,23 @@ CREATE TABLE IF NOT EXISTS transaksi (
     FOREIGN KEY (pembeli_id) REFERENCES users(id)
 );
 
--- DUMMY DATA 
+-- 4. Tabel Testimoni 
+CREATE TABLE IF NOT EXISTS testimoni (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    nama VARCHAR(100) NOT NULL,
+    isi TEXT NOT NULL,
+    likes INT DEFAULT 0,
+    dislikes INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 
--- Insert Admin & User Dummy
+-- DUMMY DATA
 INSERT INTO users (nama, email, password, role, no_hp) VALUES 
 ('Admin JB', 'admin@jbmotor.com', 'admin123', 'admin', '081234567890'),
 ('Tama User', 'tama@gmail.com', 'tama123', 'user', '089876543210');
 
--- Insert Motor Dummy (Milik Tama)
 INSERT INTO produk (user_id, merek, model, tahun, cc, harga, deskripsi, status) VALUES 
 (2, 'Honda', 'Vario 160', 2023, 160, 25000000, 'Mulus no minus, pajak hidup', 'tersedia'),
 (2, 'Yamaha', 'NMAX 155', 2022, 155, 28000000, 'Surat lengkap, pemakaian pribadi', 'tersedia');
